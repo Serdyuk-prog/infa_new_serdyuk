@@ -27,28 +27,50 @@ class Ball():
     def show(self):
         canv.move(self.ball_id, self.dx, self.dy)
 
+    def ball_click(self, mous_x, mous_y):
+        if (math.sqrt(abs(self.x - mous_x)) ** 2 + math.sqrt(abs(self.y - mous_y)) ** 2) <= self.r:
+            return TRUE
+        else:
+            return FALSE
+
 
 def tick():
-    ball.move()
-    ball.show()
+    for ball in balls:
+        ball.move()
+        ball.show()
     root.after(50, tick)
 
 
 def click(event):
     x_mous, y_mous = event.x, event.y
-    if (math.sqrt(abs(x - x_mous)) ** 2  + math.sqrt(abs(y - y_mous)) ** 2) <= r:
-        print('OK')
+    for ball in balls:
+        if ball.ball_click(x_mous, y_mous):
+            increase_score()
+
+def increase_score():
+    global score, canv, l
+    score += 1
+    #canv.create_text(500, 500, text="Your score:\n" + str(score),
+     #             justify=CENTER, font="Verdana 14")
+    l['text'] = "Your score: \n" + str(score)
+
+
 
 def main():
-    global canv, ball
-
+    global canv, balls, score, l
+    score = 0
+    l = Label(bg='black', fg='white', width=20)
+    l['text'] = "Your score: \n" + str(score)
+    l.pack()
     root.geometry(str(WIGHT) + 'x' + str(HIGHT))
     canv = Canvas(root, bg='white')
     canv.pack(fill=BOTH, expand=1)
+
     canv.bind('<Button-1>', click)
-    ball = Ball()   
+    balls = [Ball() for i in range(1)]
     tick()
     mainloop()
+    l.pack()
 
 
 main()
