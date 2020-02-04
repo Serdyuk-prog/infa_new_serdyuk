@@ -42,18 +42,18 @@ def tick():
 
 
 def click(event):
+    global canv
     x_mous, y_mous = event.x, event.y
     for ball in balls:
         if ball.ball_click(x_mous, y_mous):
             increase_score()
+            canv.delete(ball.ball_id)
+            ball.__init__()
 
 def increase_score():
     global score, canv, l
     score += 1
-    #canv.create_text(500, 500, text="Your score:\n" + str(score),
-     #             justify=CENTER, font="Verdana 14")
     l['text'] = "Your score: \n" + str(score)
-
 
 
 def main():
@@ -67,7 +67,7 @@ def main():
     canv.pack(fill=BOTH, expand=1)
 
     canv.bind('<Button-1>', click)
-    balls = [Ball() for i in range(1)]
+    balls = [Ball() for i in range(3)]
     tick()
     mainloop()
     l.pack()
